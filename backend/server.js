@@ -9,7 +9,7 @@ const app = express();
 
 app.use(express.json()); /* middleware */
 
-app.get("/", (req, res) => {
+app.get("/api/products", (req, res) => {
   res.send("Product is ready 123");
 });
 
@@ -30,6 +30,18 @@ app.post("/api/products", async (req, res) => {
   } catch (error) {
     console.error("Error occured", error.message);
     res.status(500).json({ success: false, message: "server Error" });
+  }
+});
+
+app.delete("/api/products/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await Product.findByIdAndDelete(id);
+    res.status(201).json({ success: true, message: "Succesfully deleted" });
+  } catch (error) {
+    console.error("Error detected", error.message);
+    res.status(400).json({ success: false, message: "error in deleting" });
   }
 });
 
