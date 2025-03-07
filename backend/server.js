@@ -2,8 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
 import Product from "./model/product.model.js";
+import mongoose, { mongo } from "mongoose";
 
-dotenv.config();
+dotenv.config(); /* to load environment variable */
 
 const app = express();
 
@@ -39,6 +40,27 @@ app.post("/api/products", async (req, res) => {
   }
 });
 
+app.put("/api/products/:id", async (req, res) => {
+  const { id } = req.params;
+  const product = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Product not found" });
+  }
+
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(id, product, {
+      new: true,
+    });
+    res.status(200).json({ success: true, data: updatedProduct });
+  } catch (error) {
+    console.error("Error in updating", error.message);
+    res.status(500).json({ success: false, message: "Not updated" });
+  }
+});
+
 app.delete("/api/products/:id", async (req, res) => {
   const { id } = req.params;
 
@@ -53,5 +75,5 @@ app.delete("/api/products/:id", async (req, res) => {
 
 app.listen(5000, () => {
   connectDB();
-  console.log("Listening at 50000 port hello how are you");
+  console.log("Listening at 5000 port hello how are you");
 });
