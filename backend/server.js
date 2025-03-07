@@ -9,8 +9,14 @@ const app = express();
 
 app.use(express.json()); /* middleware */
 
-app.get("/api/products", (req, res) => {
-  res.send("Product is ready 123");
+app.get("/api/products", async (req, res) => {
+  try {
+    const products = await Product.find({});
+    res.status(201).json({ success: true, data: products });
+  } catch (error) {
+    res.status(400).json({ success: false, message: "not able fetching" });
+    console.error("Error in getting: ", error.message);
+  }
 });
 
 app.post("/api/products", async (req, res) => {
