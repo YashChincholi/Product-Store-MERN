@@ -1,4 +1,5 @@
 import { useColorModeValue } from "@/components/ui/color-mode";
+import { useProductStore } from "@/store/product";
 import {
   Box,
   Button,
@@ -13,10 +14,13 @@ const CreatePage = () => {
   const [newProduct, setNewProduct] = useState({
     name: "",
     price: "",
-    imageUrl: "",
+    image: "",
   });
-  const handelAddProduct = () => {
-    console.log(newProduct);
+  const { createProducts } = useProductStore();
+  const handelAddProduct = async () => {
+    const { success, message } = await createProducts(newProduct);
+    console.log("Success: ", success);
+    console.log("Message: ", message);
   };
   return (
     <Container maxW={"sm"}>
@@ -42,18 +46,17 @@ const CreatePage = () => {
             />
             <Input
               placeholder="Price"
-              type="price"
+              type="number"
               value={newProduct.price}
               onChange={(e) => {
                 setNewProduct({ ...newProduct, price: e.target.value });
               }}
             />
             <Input
-              placeholder="ImageUrl"
-              type="imageUrl"
-              value={newProduct.imageUrl}
+              placeholder="Image"
+              value={newProduct.image}
               onChange={(e) => {
-                setNewProduct({ ...newProduct, imageUrl: e.target.value });
+                setNewProduct({ ...newProduct, image: e.target.value });
               }}
             />
             <Button colorScheme={"blue"} w={"full"} onClick={handelAddProduct}>
