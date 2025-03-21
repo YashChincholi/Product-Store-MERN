@@ -1,4 +1,5 @@
 import ProductCard from "@/components/ProductCard";
+import { Toaster } from "@/components/ui/toaster";
 import { useProductStore } from "@/store/product";
 import { Container, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import { useEffect } from "react";
@@ -60,6 +61,8 @@ const HomePage = () => {
           </Text>
         )}
       </VStack>
+      <Toaster />
+
     </Container>
   );
 };
