@@ -9,6 +9,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { Toaster, toaster } from "@/components/ui/toaster";
 
 const CreatePage = () => {
   const [newProduct, setNewProduct] = useState({
@@ -17,16 +18,29 @@ const CreatePage = () => {
     image: "",
   });
   const { createProducts } = useProductStore();
+
   const handelAddProduct = async () => {
     const { success, message } = await createProducts(newProduct);
-    console.log("Success: ", success);
-    console.log("Message: ", message);
+    if (success) {
+      toaster.create({
+        title: "Product created.",
+        description: "Your product has been created successfully.",
+        type: "success",
+      });
+    } else {
+      toaster.create({
+        title: "Error.",
+        description: message,
+        type: "error",
+      });
+    }
   };
+
   return (
     <Container maxW={"sm"}>
       <VStack spacing={8}>
         <Heading as={"p"} size={"2xl"} textAlign={"center"} mb={3}>
-          Create New Proudct
+          Create New Product
         </Heading>
         <Box
           shadow={"md"}
@@ -65,6 +79,7 @@ const CreatePage = () => {
           </VStack>
         </Box>
       </VStack>
+      <Toaster />
     </Container>
   );
 };
