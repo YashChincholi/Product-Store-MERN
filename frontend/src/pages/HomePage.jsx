@@ -62,7 +62,6 @@ const HomePage = () => {
         )}
       </VStack>
       <Toaster />
-
     </Container>
   );
 };
