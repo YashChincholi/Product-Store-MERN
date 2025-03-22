@@ -1,8 +1,5 @@
 <h1 align="center">Product Store 🚀</h1>
 
-![Demo App]([/frontend/public/screenshot-for-readme.png](https://github.com/burakorkmez/mern-crash-course/blob/master/frontend/public/screenshot-for-readme.png?raw=true))
-
-
 About This Site:
 
 -   ⚛️ Tech Stack: React.js, Node.js, Express.js, MongoDB, Chakra UI
