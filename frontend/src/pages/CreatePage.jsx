@@ -1,5 +1,6 @@
 import { useColorModeValue } from "@/components/ui/color-mode";
 import { useProductStore } from "@/store/product";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -18,6 +19,7 @@ const CreatePage = () => {
     image: "",
   });
   const { createProducts } = useProductStore();
+  const navigate = useNavigate();
 
   const handelAddProduct = async () => {
     const { success, message } = await createProducts(newProduct);
@@ -27,6 +29,7 @@ const CreatePage = () => {
         description: "Your product has been created successfully.",
         type: "success",
       });
+      navigate("/");
     } else {
       toaster.create({
         title: "Error.",

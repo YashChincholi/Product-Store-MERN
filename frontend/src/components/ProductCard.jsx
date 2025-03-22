@@ -9,9 +9,7 @@ import {
   Text,
   Input,
   Stack,
-  CloseButton,
   Portal,
-  useDialog,
   Dialog,
 } from "@chakra-ui/react";
 import React, { useState, useRef } from "react";
@@ -25,8 +23,8 @@ const ProductCard = ({ product }) => {
   const textColor = useColorModeValue("gray.600", "gray.200");
   const bg = useColorModeValue("white", "gray.800");
 
-  const { deleteProducts } = useProductStore();
-  const dialog = useDialog();
+  const { deleteProducts, updateProducts } = useProductStore();
+  const [isOpen, setIsOpen] = useState(false);
   const initialRef = useRef();
 
   const [updatedProduct, setUpdatedProduct] = useState({
@@ -52,14 +50,22 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const handleUpdate = () => {
-    // Add your update logic here
-    toaster.create({
-      title: "Product Updated.",
-      description: "Your product has been updated successfully.",
-      type: "success",
-    });
-    dialog.onClose();
+  const handelUpdate = async (pid, updatedProduct) => {
+    const { success, message } = await updateProducts(pid, updatedProduct);
+    if (success) {
+      toaster.create({
+        title: "Product Updated.",
+        description: "Your product has been updated successfully.",
+        type: "success",
+      });
+      setIsOpen(false); // Close the dialog
+    } else {
+      toaster.create({
+        title: "Error.",
+        description: message,
+        type: "error",
+      });
+    }
   };
 
   return (
@@ -74,8 +80,8 @@ const ProductCard = ({ product }) => {
       <Image
         src={product.image}
         alt={product.name}
-        h={48}
-        w="full"
+        h={'xs'}
+        w="100%"
         objectFit="cover"
       />
 
@@ -89,9 +95,9 @@ const ProductCard = ({ product }) => {
         </Text>
 
         <HStack spacing={2}>
-          <Dialog.RootProvider value={dialog} size="sm">
+          <Dialog.Root isOpen={isOpen} onOpenChange={setIsOpen} size="sm">
             <Dialog.Trigger asChild>
-              <Button bg="blue.500">
+              <Button bg="blue.500" onClick={() => setIsOpen(true)}>
                 <FaEdit color="white" />
               </Button>
             </Dialog.Trigger>
@@ -108,50 +114,59 @@ const ProductCard = ({ product }) => {
                         ref={initialRef}
                         placeholder="Name"
                         value={updatedProduct.name}
-                        onChange={(e) =>
+                        onChange={(e) => {
                           setUpdatedProduct({
                             ...updatedProduct,
                             name: e.target.value,
-                          })
-                        }
+                          });
+                        }}
                       />
                       <Input
                         placeholder="Price"
                         type="number"
                         value={updatedProduct.price}
-                        onChange={(e) =>
+                        onChange={(e) => {
                           setUpdatedProduct({
                             ...updatedProduct,
                             price: e.target.value,
-                          })
-                        }
+                          });
+                        }}
                       />
                       <Input
                         placeholder="Image URL"
                         value={updatedProduct.image}
-                        onChange={(e) =>
+                        onChange={(e) => {
                           setUpdatedProduct({
                             ...updatedProduct,
                             image: e.target.value,
-                          })
-                        }
+                          });
+                        }}
                       />
                     </Stack>
                   </Dialog.Body>
                   <Dialog.Footer>
                     <Dialog.ActionTrigger asChild>
-                      <Button variant="outline" onClick={dialog.onClose}>
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsOpen(false)}
+                      >
                         Cancel
                       </Button>
                     </Dialog.ActionTrigger>
-                    <Button colorScheme="blue" onClick={handleUpdate} ml={3}>
+                    <Button
+                      colorScheme="blue"
+                      onClick={() => {
+                        handelUpdate(product._id, updatedProduct);
+                      }}
+                      ml={3}
+                    >
                       Update
                     </Button>
                   </Dialog.Footer>
                 </Dialog.Content>
               </Dialog.Positioner>
             </Portal>
-          </Dialog.RootProvider>
+          </Dialog.Root>
           <Button bg="red.500">
             <FiDelete
               onClick={() => {

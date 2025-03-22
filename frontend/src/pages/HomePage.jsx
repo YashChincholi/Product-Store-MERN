@@ -14,7 +14,7 @@ const HomePage = () => {
 
   return (
     <Container maxW="container.xl" py={12}>
-      <VStack spacing={8}>
+      <VStack gap={'10'}>
         <Text
           fontSize={30}
           fontWeight={"bold"}
@@ -28,13 +28,13 @@ const HomePage = () => {
         </Text>
 
         <SimpleGrid
-          spacing={10}
           columns={{
             lg: 3,
             md: 2,
             base: 1,
           }}
-          w="full"
+          gap="40px"
+          w={"full"}
         >
           {products.map((product) => (
             <ProductCard key={product._id} product={product} />
