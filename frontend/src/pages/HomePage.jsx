@@ -1,9 +1,10 @@
-import ProductCard from "@/components/ProductCard";
-import { Toaster } from "@/components/ui/toaster";
-import { useProductStore } from "@/store/product";
+import { Suspense, lazy, useEffect } from "react";
 import { Container, SimpleGrid, Text, VStack } from "@chakra-ui/react";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useProductStore } from "@/store/product";
+import { Toaster } from "@/components/ui/toaster";
+
+const ProductCard = lazy(() => import("@/components/ProductCard"));
 
 const HomePage = () => {
   const { fetchProducts, products } = useProductStore();
@@ -14,7 +15,7 @@ const HomePage = () => {
 
   return (
     <Container maxW="container.xl" py={12}>
-      <VStack gap={'10'}>
+      <VStack gap={"10"}>
         <Text
           fontSize={30}
           fontWeight={"bold"}
@@ -36,9 +37,11 @@ const HomePage = () => {
           gap="40px"
           w={"full"}
         >
-          {products.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
+          <Suspense fallback={<div>Loading...</div>}>
+            {products.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </Suspense>
         </SimpleGrid>
 
         {products.length === 0 && (
